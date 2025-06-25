@@ -20,6 +20,9 @@ pip install -r requirements.txt
 ```
  uvicorn main:app --reload 
 ```
+### Create a .env file 
+with this variables QDRANT_URL, QDRANT_API_KEY and COLLECTION_NAME
+
 ### For API Docs 
 - visit : http://localhost:8000/docs
 - or http://localhost:8000/redocs
