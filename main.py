@@ -71,3 +71,15 @@ async def search_similar_frames(
         ]
     except Exception as e:
         raise HTTPException(500, f"Search failed: {str(e)}")
+def search(self, query_vector: list, limit: int = 5):
+        try:
+            return self.client.search(
+                collection_name=self.collection_name,
+                query_vector=query_vector,
+                limit=limit,
+                with_vectors=True 
+
+            )
+        except Exception as e:
+            print(f"Search failed: {str(e)}")
+            raise
