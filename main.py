@@ -18,4 +18,24 @@ async def upload_video(
     interval: int = Form(1, description="Frame extraction interval in seconds")
 ):
     try:
-        print("hello")
+        # Save video temporarily
+        video_path = f"./temp/temp_{file.filename}"
+        with open(video_path, "wb") as f:
+            f.write(await file.read())
+        
+        # Process video and extract frames
+        frame_paths = process_video(
+            video_path=video_path,
+            output_dir="static/frames",
+            interval=interval
+        )
+        # Compute and store feature vectors
+        for path in frame_paths:
+            vector = compute_histogram(path)
+            payload = {"frame_path": path}
+            qdrant.upsert(vector=vector, payload=payload)
+    
+        os.remove(video_path)
+        return {"message": f"Processed {len(frame_paths)} frames"}
+    except Exception as e:
+        raise HTTPException(500, f"Processing failed: {str(e)}")
